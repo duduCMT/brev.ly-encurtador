@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Open Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  --color-blue-base: #2c46b1;
+  --color-blue-dark: #2c4091;
+  --color-white: #ffffff;
+  --color-gray-100: #f9f9fb;
+  --color-gray-200: #e4e6ec;
+  --color-gray-300: #cdcfd5;
+  --color-gray-400: #74798b;
+  --color-gray-500: #4d505c;
+  --color-gray-600: #1f2025;
+  --color-danger: #b12c4d;
+
+  --color-background: var(--color-white);
+  --color-foreground: var(--color-gray-600);
+  --color-border: var(--color-gray-300);
+  --color-primary: var(--color-blue-base);
+  --color-primary-foreground: var(--color-white);
+
+  --text-xs: 10px;
+  --leading-xs: 14px;
+
+  --text-sm: 12px;
+  --leading-sm: 16px;
+
+  --text-md: 14px;
+  --leading-md: 18px;
+
+  --text-lg: 18px;
+  --leading-lg: 24px;
+
+  --text-xl: 24px;
+  --leading-xl: 32px;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+}
+
+@layer components {
+  .text-style-xl {
+    @apply font-bold text-xl leading-xl;
+  }
+  .text-style-lg {
+    @apply font-bold text-lg leading-lg;
+  }
+  .text-style-md {
+    @apply font-semibold text-md leading-md;
+  }
+  .text-style-sm {
+    @apply font-normal text-sm leading-sm;
+  }
+  .text-style-xs {
+    @apply font-normal text-xs leading-xs uppercase;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2
+           text-sm font-semibold shadow-sm transition-colors;
+    background: var(--color-primary);
+    color: var(--color-primary-foreground);
+  }
+  .btn-primary:hover {
+    filter: brightness(0.95);
+  }
+
+  .card {
+    @apply rounded-lg border p-4;
+    background: var(--color-background);
+    border-color: var(--color-border);
+    color: var(--color-foreground);
+  }
+}
+
+@keyframes tlb-slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+
+@keyframes dots {
+  from { width: 0ch; }
+  to   { width: 3ch; }
+}
+
+
+@utility animate-tlb-slide {
+  animation: tlb-slide 1.1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform;
+}
+
+@utility animate-dots {
+  animation: dots 1.2s steps(4, end) infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-tlb-slide {
+    animation-duration: 2.2s;
+  }
+
+  .animate-dots { animation-duration: 2.4s; }
+}
+
+body {
+  background-color: var(--color-gray-200);
+}

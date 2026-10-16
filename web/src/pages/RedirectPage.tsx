@@ -1,0 +1,56 @@
+import { FRONTEND_URL } from "@/lib/constants";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import LogoIcon from "@/assets/logo-icon.svg"
+import { useLinksContext } from "@/contexts/links-context";
+
+export function RedirectPage() {
+  const [target, setTarget] = useState<string>(FRONTEND_URL)
+  const { ["slug"]: shortUrl } = useParams();
+  const navigate = useNavigate();
+  const ranRef = useRef(false);
+  const { getOriginalURL, incrementClick } = useLinksContext();
+
+  useEffect(() => {
+    if (!shortUrl) {
+      navigate("/404", { replace: true });
+      return;
+    }
+
+    if (ranRef.current) return;
+    ranRef.current = true;
+
+    (async () => {
+      try {
+        const { originalUrl } = await getOriginalURL(shortUrl);
+
+        if (!originalUrl || !/^https?:\/\//i.test(originalUrl)) {
+          navigate("/404", { replace: true });
+          return;
+        }
+
+        await incrementClick(shortUrl)
+
+        setTarget(originalUrl);
+        window.location.replace(originalUrl);
+      } catch {
+        navigate("/404", { replace: true });
+      }
+    })();
+  }, [navigate, shortUrl, getOriginalURL, incrementClick]);
+
+  return (
+    <div className="h-dvh flex justify-center items-center">
+      <div className="flex flex-col gap-6 items-center bg-gray-100 rounded-md mx-4 text-center lg:py-16 lg:px-12 px-5 py-12">
+        <img src={LogoIcon} alt="Brev" className="w-12 h-12" />
+        <p className="text-style-xl text-gray-600 flex flex-row gap-1 text-left" role="status" aria-live="polite">
+          Redirecionando
+          <span className="inline-block w-[3ch] overflow-hidden align-baseline animate-dots">
+            ...
+          </span>
+        </p>
+        <span className="text-style-md text-gray-500">O link será aberto automaticamente em alguns instantes.<br />Não foi redirecionado? <a className="text-style-md text-blue-base" href={target}>Acesse aqui</a></span>
+      </div>
+    </div>
+  );
+}
